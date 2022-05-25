@@ -1,14 +1,29 @@
-pub struct Temperature {
-    value: f32,
-    unit: String
+use std::{time::SystemTime};
+
+#[allow(dead_code)]
+enum TemperatureUnit {
+    Celsius,
+    Fahrenheit
 }
 
+#[allow(dead_code)]
+pub struct Temperature {
+    value: f32,
+    unit: TemperatureUnit,
+    date_time: SystemTime
+}
+
+#[allow(dead_code)]
 pub struct DeviceSimulator {
-    temperature: Temperature
+    values: Vec<Temperature>
 }
 
 impl DeviceSimulator {
-    fn new() -> Self {
-        Self {}
+    pub fn new() -> Self {
+        Self { values: vec![] }
+    }
+
+    pub fn start(&self) {
+        println!("hello from start method :)");
     }
 }
