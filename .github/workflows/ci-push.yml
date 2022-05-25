@@ -1,0 +1,27 @@
+name: Lint
+on:
+  push:
+    paths:
+      - '**/'
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cargo/bin/
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
+          target/
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+    - name: Cargo fmt
+      uses: actions-rs/cargo@v1
+      continue-on-error: false
+      with:
+        command: fmt
+        args: --all -- --check
