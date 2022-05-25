@@ -14,9 +14,15 @@ jobs:
     - uses: actions-rs/toolchain@v1
       with:
         toolchain: stable
-    - name: Cargo fmt
+    - name: fmt
       uses: actions-rs/cargo@v1
       continue-on-error: false
       with:
         command: fmt
         args: --all -- --check
+    - name: clippy
+      uses: actions-rs/cargo@v1
+      continue-on-error: false
+      with:
+        command: clippy
+        args: -D warnings
