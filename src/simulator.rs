@@ -58,9 +58,7 @@ impl DeviceSimulator {
                         values.last().expect("Array is empty")
                     );
                 }
-                None => {
-                    error!("Values Array seems to be empty");
-                }
+                None => error!("Values Array seems to be empty")
             }
             sleep(Duration::from_millis(SLEEP_IN_MS)).await;
         }
