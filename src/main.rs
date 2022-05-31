@@ -5,6 +5,6 @@ async fn main() {
     // Initialize logger
     env_logger::init();
 
-    let device_simulator = DeviceSimulator::new();
+    let device_simulator = DeviceSimulator::default();
     device_simulator.start().await;
 }
