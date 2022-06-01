@@ -1,5 +1,5 @@
 use log::debug;
-use rust_azure_iot_simulator::{configuration::{get_deserialized_configuration}};
+use rust_azure_iot_simulator::configuration::get_deserialized_configuration;
 
 #[tokio::main]
 async fn main() {
@@ -15,6 +15,4 @@ async fn main() {
     // device_simulator.start().await;
 
     // send_d2c_message().await;
-
-  
 }
