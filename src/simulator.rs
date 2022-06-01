@@ -3,10 +3,12 @@ use std::{
     time::{Duration, SystemTime},
 };
 
-use log::{debug, error};
+use log::{debug, error, info};
 use rand::{thread_rng, Rng};
 use time::OffsetDateTime;
 use tokio::time::sleep;
+
+use crate::{configuration::Settings, sender::send_d2c_message};
 
 const MIN_TEMP: f32 = 20.0;
 const MAX_TEMP: f32 = 25.0;
@@ -32,31 +34,52 @@ impl fmt::Display for Temperature {
 }
 
 pub struct DeviceSimulator {
+    // we currently hold the values Vec for future improvements
     values: Vec<Temperature>,
-}
-
-impl Default for DeviceSimulator {
-    fn default() -> Self {
-        let item = Temperature {
-            value: 22.0,
-            date_time: SystemTime::now(),
-        };
-        Self { values: vec![item] }
-    }
+    settings: Settings 
 }
 
 impl DeviceSimulator {
+
+    pub fn new(settings: Settings) -> Self {
+        let temperature = Temperature {
+            value: 22.,
+            date_time: SystemTime::now()
+        };
+
+        Self {
+            values: vec![temperature],
+            settings
+        }
+    }
+
     pub async fn start(&mut self) {
         loop {
             match self.get_last_item() {
                 Some(_item) => {
                     let data = &self.get_new_item();
                     let values = self.insert_data(data.to_owned());
-                    debug!(
+                    info!(
                         "Current Size: {}, Last Item: {:?}",
                         values.len(),
                         values.last().expect("Array is empty")
                     );
+
+                    // Converting
+                    let last_item = values
+                        .last()
+                        .expect("Array is empty")
+                        .to_string()
+                        .as_bytes()
+                        .to_vec();
+
+                    send_d2c_message(
+                        &self.settings.iothub.hostname,
+                        &self.settings.device.device_id,
+                        &self.settings.device.shared_access_key,
+                        last_item
+                    ).await;
+
                 }
                 None => error!("Values Array seems to be empty"),
             }

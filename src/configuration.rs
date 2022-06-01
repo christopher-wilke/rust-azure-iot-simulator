@@ -13,8 +13,8 @@ pub struct IoTHub {
 
 #[derive(serde::Deserialize)]
 pub struct Device {
-    // device_id: String,
-    // shared_access_key: String,
+    pub device_id: String,
+    pub shared_access_key: String,
 }
 
 pub fn get_deserialized_configuration() -> Result<Settings, ConfigError> {
