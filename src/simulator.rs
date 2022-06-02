@@ -3,7 +3,7 @@ use std::{
     time::{Duration, SystemTime},
 };
 
-use log::{debug, error, info};
+use log::{error, info};
 use rand::{thread_rng, Rng};
 use time::OffsetDateTime;
 use tokio::time::sleep;
@@ -36,20 +36,19 @@ impl fmt::Display for Temperature {
 pub struct DeviceSimulator {
     // we currently hold the values Vec for future improvements
     values: Vec<Temperature>,
-    settings: Settings 
+    settings: Settings,
 }
 
 impl DeviceSimulator {
-
     pub fn new(settings: Settings) -> Self {
         let temperature = Temperature {
             value: 22.,
-            date_time: SystemTime::now()
+            date_time: SystemTime::now(),
         };
 
         Self {
             values: vec![temperature],
-            settings
+            settings,
         }
     }
 
@@ -77,9 +76,9 @@ impl DeviceSimulator {
                         &self.settings.iothub.hostname,
                         &self.settings.device.device_id,
                         &self.settings.device.shared_access_key,
-                        last_item
-                    ).await;
-
+                        last_item,
+                    )
+                    .await;
                 }
                 None => error!("Values Array seems to be empty"),
             }

@@ -5,8 +5,12 @@ use log::debug;
 use time::OffsetDateTime;
 use tokio::time::sleep;
 
-pub async fn send_d2c_message(hostname: &str, device_id: &str, shared_access_key: &str, msg: Vec<u8>) {
-
+pub async fn send_d2c_message(
+    hostname: &str,
+    device_id: &str,
+    shared_access_key: &str,
+    msg: Vec<u8>,
+) {
     let token_source = DeviceKeyTokenSource::new(hostname, device_id, shared_access_key)
         .expect("Could not create Token Source");
 
@@ -24,7 +28,7 @@ pub async fn send_d2c_message(hostname: &str, device_id: &str, shared_access_key
     sleep(Duration::from_secs(5)).await;
 }
 
-fn get_local_time() -> String {
+fn _get_local_time() -> String {
     let local_time: OffsetDateTime = SystemTime::now().into();
     format!(
         "{}:{}:{}",

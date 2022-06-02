@@ -1,5 +1,7 @@
-use log::debug;
-use rust_azure_iot_simulator::{configuration::get_deserialized_configuration, simulator::DeviceSimulator, sender::send_d2c_message};
+use rust_azure_iot_simulator::{
+    configuration::get_deserialized_configuration,
+    simulator::DeviceSimulator,
+};
 
 #[tokio::main]
 async fn main() {
