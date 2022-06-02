@@ -8,7 +8,7 @@ use rand::{thread_rng, Rng};
 use time::OffsetDateTime;
 use tokio::time::sleep;
 
-use crate::{configuration::Settings, sender::send_d2c_message};
+use crate::{configuration::Settings, sender::Sender};
 
 const MIN_TEMP: f32 = 20.0;
 const MAX_TEMP: f32 = 25.0;
@@ -18,6 +18,15 @@ const SLEEP_IN_MS: u64 = 5000;
 pub struct Temperature {
     value: f32,
     date_time: SystemTime,
+}
+
+impl Default for Temperature {
+    fn default() -> Self {
+        Self {
+            value: 0.,
+            date_time: SystemTime::now(),
+        }
+    }
 }
 
 impl fmt::Display for Temperature {
@@ -36,19 +45,23 @@ impl fmt::Display for Temperature {
 pub struct DeviceSimulator {
     // we currently hold the values Vec for future improvements
     values: Vec<Temperature>,
-    settings: Settings,
+    sender: Sender,
 }
 
 impl DeviceSimulator {
-    pub fn new(settings: Settings) -> Self {
-        let temperature = Temperature {
-            value: 22.,
-            date_time: SystemTime::now(),
-        };
+    pub async fn new(settings: Settings) -> Self {
+        let temperature = Temperature::default();
+
+        let sender = Sender::new(
+            &settings.iothub.hostname,
+            &settings.device.device_id,
+            &settings.device.shared_access_key,
+        )
+        .await;
 
         Self {
             values: vec![temperature],
-            settings,
+            sender,
         }
     }
 
@@ -72,13 +85,10 @@ impl DeviceSimulator {
                         .as_bytes()
                         .to_vec();
 
-                    send_d2c_message(
-                        &self.settings.iothub.hostname,
-                        &self.settings.device.device_id,
-                        &self.settings.device.shared_access_key,
-                        last_item,
-                    )
-                    .await;
+                    match self.sender.send_message(last_item).await {
+                        Ok(_) => (),
+                        Err(e) => error!("Error while trying to send message, {:?}", e),
+                    }
                 }
                 None => error!("Values Array seems to be empty"),
             }

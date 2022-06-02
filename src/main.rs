@@ -4,23 +4,11 @@ use rust_azure_iot_simulator::{
 
 #[tokio::main]
 async fn main() {
-    // Initialize logger
+    // Enables log macros
     env_logger::init();
 
-    // Synchronously read `base.yaml` from `configuration` folder
-    let config = get_deserialized_configuration().expect("Could not load config file");
-    let mut simulator = DeviceSimulator::new(config);
+    let config = get_deserialized_configuration().expect("Could not deserialized configuration");
 
+    let mut simulator = DeviceSimulator::new(config).await;
     simulator.start().await;
-
-    // let mut device_simulator = DeviceSimulator::default()
-    //     .start()
-    //     .await;
-
-    // send_d2c_message(
-    //     &config.iothub.hostname,
-    //     &config.device.device_id,
-    //     &config.device.shared_access_key
-    // )
-    // .await;
 }
