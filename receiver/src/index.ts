@@ -3,7 +3,6 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 const connectionString = process.env["IOTHUB_EH_COMPATIBLE_CONNECTION_STRING"] || "";
-console.log(connectionString)
 const consumerGroup = "";
 
 export async function main(): Promise<void> {
@@ -13,9 +12,7 @@ export async function main(): Promise<void> {
         {
           processEvents: async (events, context) => {
             for (const event of events) {
-              console.log(
-                `Received event: '${event.body}' from partition: '${context.partitionId}' and consumer group: '${context.consumerGroup}'`
-              );
+              console.log(`${event.body}`);
             }
           },
           processError: async (err, context) => {
