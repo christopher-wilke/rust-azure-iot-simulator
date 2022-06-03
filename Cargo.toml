@@ -18,3 +18,9 @@ tracing = "~0.1.34"
 version = "~0.13.1"
 default-features = false
 features = ["yaml"]
+
+[profile.release]
+strip = true
+opt-level = "z"
+lto = true
+codegen-units = 1
