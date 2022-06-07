@@ -26,9 +26,32 @@ jobs:
       with:
         command: clippy
         args: -- -D warnings
-    - name: build armv7
-      uses: actions-rs/cargo@v1
-      continue-on-error: false
+    
+  publish-to-github:
+    name: Publish to Github
+    runs-on: ${{matrix.os}}
+    strategy:
+      matrix:
+        include:
+        - build: linux
+          os: ubuntu-latest
+          rust: stable
+          target: x86_64-unknown-linux-musl
+          cross: false
+        - build: arm-v7
+          os: ubuntu-latest
+          rust: stable
+          target: armv7-unknown-linux-gnueabihf
+          linker: gcc-arm-linux-gnueabihf
+          cross: true
+        - build: aarch64
+          os: ubuntu-latest
+          rust: stable
+          target: aarch64-unknown-linux-gnu
+          linker: gcc-aarch64-linux-gnu
+          cross: true
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
       with:
-        command: build
-        args: --release --target=armv7-unknown-linux-gnueabihf
+        fetch-depth: 1
