@@ -72,6 +72,6 @@ jobs:
       uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/')
       with:
-        files: /home/runner/work/rust-azure-iot-simulator/rust-azure-iot-simulator
+        files: /home/runner/work/rust-azure-iot-simulator/target/armv7-unknown-linux-gnueabihf/release/rust-azure-iot-simulator
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
