@@ -33,11 +33,6 @@ jobs:
     strategy:
       matrix:
         include:
-        - build: linux
-          os: ubuntu-latest
-          rust: stable
-          target: x86_64-unknown-linux-musl
-          cross: false
         - build: arm-v7
           os: ubuntu-latest
           rust: stable
