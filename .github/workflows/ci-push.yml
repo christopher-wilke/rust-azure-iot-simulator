@@ -7,27 +7,27 @@ on:
     #   - "v*.*.*"
 
 jobs:
-  lint:
-    name: Lint
-    runs-on: ubuntu-latest
+  # lint:
+  #   name: Lint
+  #   runs-on: ubuntu-latest
 
-    steps:
-    - uses: actions/checkout@v2
-    - uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-    - name: fmt
-      uses: actions-rs/cargo@v1
-      continue-on-error: false
-      with:
-        command: fmt
-        args: --all -- --check
-    - name: clippy
-      uses: actions-rs/cargo@v1
-      continue-on-error: false
-      with:
-        command: clippy
-        args: -- -D warnings
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - uses: actions-rs/toolchain@v1
+  #     with:
+  #       toolchain: stable
+  #   - name: fmt
+  #     uses: actions-rs/cargo@v1
+  #     continue-on-error: false
+  #     with:
+  #       command: fmt
+  #       args: --all -- --check
+  #   - name: clippy
+  #     uses: actions-rs/cargo@v1
+  #     continue-on-error: false
+  #     with:
+  #       command: clippy
+  #       args: -- -D warnings
     
   publish-to-github:
     name: Publish to Github
@@ -72,7 +72,8 @@ jobs:
       run: |
         pwd
         ls -la
-
+        cd target/armv7-unknown-linux-gnueabihf/release
+        ls -la
     # - name: Release
     #   uses: softprops/action-gh-release@v1
     #   if: startsWith(github.ref, 'refs/tags/')
