@@ -78,10 +78,10 @@ jobs:
                 stage=$(mktemp -d -t tmp)
                 ;;
         esac
-        cp target/${{ matrix.target }}/release/sysit $stage/
+        cp target/${{ matrix.target }}/release/rust-azure-iot-simulator $stage/
         cd $stage
         RELEASE_VERSION=${GITHUB_REF#refs/tags/}
-        ASSET_NAME="sysit-$RELEASE_VERSION-${{ matrix.target }}.tar.gz"
+        ASSET_NAME="rust-azure-iot-simulator-$RELEASE_VERSION-${{ matrix.target }}.tar.gz"
         ASSET_PATH="$src/$ASSET_NAME"
         CHECKSUM_PATH="$ASSET_PATH.sha256"
         echo "ASSET_PATH=$ASSET_PATH" >> $GITHUB_ENV
