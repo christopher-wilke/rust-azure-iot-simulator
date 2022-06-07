@@ -26,3 +26,9 @@ jobs:
       with:
         command: clippy
         args: -- -D warnings
+    - name: build armv7
+      uses: actions-rs/cargo@v1
+      continue-on-error: false
+      with:
+        command: build
+        args: --release --target=armv7-unknown-linux-gnueabihf
