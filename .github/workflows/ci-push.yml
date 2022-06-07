@@ -63,7 +63,7 @@ jobs:
       run: |
         sudo apt update
         sudo apt install ${{ matrix.linker }}
-        cat .cargo/config.github >> .cargo/config.toml
+        cat .cargo/config.github >> .cargo/config
     - name: Install Rust
       run: |
         rustup install ${{ matrix.rust }}
