@@ -4,15 +4,13 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-azure_iot_sdk = "~0.8.0"
-console-subscriber = "~0.1.6"
+azure_iot_sdk = { version = "~0.8.0", features=["https-transport"] }
 env_logger = "~0.9.0"
 log = "~0.4.17"
 rand = "~0.8.5"
 serde = { version = "1", features = ["derive"] }
 time = "~0.3.9"
-tokio = { version = "~1.18.2", features = ["full", "tracing"] }
-tracing = "~0.1.34"
+tokio = { version = "~1.18.2", features = ["macros", "rt"] }
 
 [dependencies.config]
 version = "~0.13.1"
@@ -24,3 +22,4 @@ strip = true
 opt-level = "z"
 lto = true
 codegen-units = 1
+panic = "abort"
