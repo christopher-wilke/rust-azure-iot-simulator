@@ -1,5 +1,6 @@
 use rust_azure_iot_simulator::{
-    configuration::get_deserialized_configuration, simulator::DeviceSimulator, metrics_controller::init_meter,
+    metrics_controller::init_meter,
+    // simulator::DeviceSimulator,
 };
 
 #[tokio::main]
