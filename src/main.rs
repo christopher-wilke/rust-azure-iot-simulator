@@ -1,5 +1,5 @@
 use rust_azure_iot_simulator::{
-    configuration::get_deserialized_configuration, simulator::DeviceSimulator,
+    configuration::get_deserialized_configuration, simulator::DeviceSimulator, metrics_controller::init_meter,
 };
 
 #[tokio::main]
@@ -7,8 +7,9 @@ async fn main() {
     // Enables log macros
     env_logger::init();
 
-    let config = get_deserialized_configuration().expect("Could not deserialized configuration");
+    // let config = get_deserialized_configuration().expect("Could not deserialized configuration");
 
-    let mut simulator = DeviceSimulator::new(config).await;
-    simulator.start().await;
+    // let mut simulator = DeviceSimulator::new(config).await;
+    // simulator.start().await;
+    init_meter();
 }
