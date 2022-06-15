@@ -1,4 +1,4 @@
-use rust_azure_iot_simulator::metrics_controller::start_meter;
+// use rust_azure_iot_simulator::metrics_controller::start_meter;
 
 #[tokio::main]
 async fn main() {
@@ -9,5 +9,5 @@ async fn main() {
 
     // let mut simulator = DeviceSimulator::new(config).await;
     // simulator.start().await;
-    start_meter().await;
+    // start_meter().await;
 }
