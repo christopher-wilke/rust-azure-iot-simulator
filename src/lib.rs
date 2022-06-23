@@ -1,4 +1,6 @@
-pub mod configuration;
-// pub mod metrics_controller;
-pub mod sender;
-pub mod simulator;
+// pub mod configuration;
+pub mod metrics_server;
+pub mod proto;
+pub mod tmp_sender;
+// pub mod sender;
+// pub mod simulator;

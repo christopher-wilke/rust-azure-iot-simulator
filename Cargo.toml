@@ -5,6 +5,8 @@ edition = "2021"
 
 [dependencies]
 azure_iot_sdk = { version = "~0.8.0", features=["https-transport"] }
+crossbeam-channel = "0.5.5"
+ctrlc = "3.2.2"
 env_logger = "~0.9.0"
 futures-util = { version = "0.3", default-features = false, features = ["std"] }
 lazy_static = "1.4"
@@ -17,7 +19,7 @@ rand = "~0.8.5"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1.0"
 time = "~0.3.9"
-tokio = { version = "~1.18.2", features = ["macros", "rt"] }
+tokio = { version = "1", features = ["full"] }
 tonic = "0.6.2"
 
 [dependencies.config]
@@ -33,14 +35,5 @@ codegen-units = 1
 panic = "abort"
 
 [build-dependencies]
+anyhow = "1"
 tonic-build = "0.6.2"
-
-[[bin]]
-name = "grpc-server"
-path = "src/server.rs"
-doc = false
-
-[[bin]]
-name = "grpc-client"
-path = "src/client.rs"
-doc = false
