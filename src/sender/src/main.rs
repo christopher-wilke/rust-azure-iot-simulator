@@ -1,6 +1,7 @@
 use crossbeam_channel::{Receiver, bounded, tick, select};
 use futures_util::Stream;
 use log::debug;
+use opentelemetry::metrics::Unit;
 use opentelemetry::sdk::metrics::{selectors, PushController};
 use opentelemetry::{metrics::{Meter, MetricsError, self}, sdk::{export::metrics::stdout::ExportBatch}, global};
 use opentelemetry_otlp::{ExportConfig, Protocol, WithExportConfig};
@@ -83,7 +84,11 @@ pub fn gather_data() {
     let meter = global::meter("rust-azure-iot-simulator");
 
     let _ = meter
-        .f64_value_observer("temperature", |r| r.observe(1337.0, &[]))
+        .f64_value_observer(
+            "temperature", 
+            |r| r.observe(1337.0, &[])
+        )
+        .with_unit(Unit::new("Celsius"))
         .with_description("Current Temperature")
         .init();
 }
