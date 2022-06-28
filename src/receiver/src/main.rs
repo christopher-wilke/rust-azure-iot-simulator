@@ -1,7 +1,7 @@
 use std::net::Ipv4Addr;
 
 use async_trait::async_trait;
-use receiver::proto::{collector::metrics::v1::{*, metrics_service_server::{MetricsService, MetricsServiceServer}}, metrics::v1::{Gauge, metric::Data}};
+use receiver::{proto::{collector::metrics::v1::{*, metrics_service_server::{MetricsService, MetricsServiceServer}}, metrics::v1::{Gauge, metric::Data}}, D2C_Extractor::{D2C_Extractor}};
 use tonic::{transport::Server, Response};
 
 pub struct MetricsEndpoint {}
@@ -23,41 +23,34 @@ impl MetricsService for MetricsEndpoint {
         request: tonic::Request<ExportMetricsServiceRequest>,
     ) -> Result<Response<ExportMetricsServiceResponse>, tonic::Status> {
         
-        let data = request.into_inner().resource_metrics;
+        let mut extractor = D2C_Extractor {
+            raw_data: request.into_inner().resource_metrics,
+            ..Default::default()
+        };
 
-        match data.get(0) {
-            Some(resource_metrics) => {
-                let scope_metrics = &resource_metrics.scope_metrics.get(0).unwrap();
-                unsafe { 
-                    let metric = scope_metrics.metrics.get_unchecked(0).to_owned();
+        extractor.extract_from_stream();
 
-                    match metric.data {
-                        Some(Data::Gauge(gauge)) => {
-                            println!{"{:?}", gauge.data_points.get(0).unwrap().value};
-                        },
-                        Some(_) => {},
-                        None => todo!(),
-                    };
-                    // let foo = match &val.data {
-                    //     Some(Data::Gauge(gauge)) => {
-                           
-                    //     },
-                    //     None => {
-                    //         panic!("paniced");
-                    //     }
-                    // };
+        // message.extract_from_stream();
 
-                    // println!("{:?}", val.data);
-                    // match &val.data {
-                    //     Some(value) => {
-                    //        let new_val = value.to_owned();
-                    //     }
-                    //     None => {}
-                    // }
-                }   
-            },
-            None => {}
-        }
+        // let data = request.into_inner().resource_metrics;
+
+        // match data.get(0) {
+        //     Some(resource_metrics) => {
+        //         let scope_metrics = &resource_metrics.scope_metrics.get(0).unwrap();
+        //         // unsafe { 
+        //         //     let metric = scope_metrics.metrics.get_unchecked(0).to_owned();
+
+        //         //     match metric.data {
+        //         //         Some(Data::Gauge(gauge)) => {
+        //         //             println!{"{:?}", gauge.data_points.get(0).unwrap().value};
+        //         //         },
+        //         //         Some(_) => {},
+        //         //         None => todo!(),
+        //         //     };
+        //         // }   
+        //     },
+        //     None => {}
+        // }
 
        Ok(Response::new(ExportMetricsServiceResponse {}))
     }
@@ -65,6 +58,8 @@ impl MetricsService for MetricsEndpoint {
 
 #[tokio::main]
 pub async fn main() {
+    env_logger::init();
+
     run_server().await;
 }
 
