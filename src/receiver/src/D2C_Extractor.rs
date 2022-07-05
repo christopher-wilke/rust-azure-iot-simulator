@@ -1,49 +1,41 @@
-use log::debug;
+use log::{info};
 
-use crate::proto::metrics::v1::ResourceMetrics;
+use crate::proto::metrics::v1::{ResourceMetrics, ScopeMetrics};
 
-pub struct D2C_Extractor {
+pub struct D2cExtractor {
     pub raw_data: Vec<ResourceMetrics>,
-    pub metric: Metric
+    pub scope_metric: Option<ScopeMetrics>
 }
 
-impl Default for D2C_Extractor {
+impl Default for D2cExtractor {
     fn default() -> Self {
         Self { 
-            raw_data: Default::default(), 
-            metric: Default::default() 
+            raw_data: Default::default(),
+            scope_metric: Default::default()
         }
     }
 }
 
-pub struct Metric {
-    name: String
-}
+impl D2cExtractor {
 
-impl Default for Metric {
-    fn default() -> Self {
-        Self { name: Default::default() }
-    }
-}
-
-impl D2C_Extractor {
-    pub fn extract_from_stream(&mut self) {
-        println!("{:?}", self.raw_data);
-        self.get_metric_name();
-        // let metric = Metric::default();
-    }
-
-    pub fn get_metric_name(&self) {
-        if let Some(resource_metric) = self.raw_data.get(0) {
-            println!("Running in get_metric_name");
-            println!("{:?}", resource_metric);
+    pub fn extract_scope_metric_from_stream(&mut self) {
+        let sm = self.get_scope_metric();
+        if sm.is_some() {
+            println!("{:?}", sm.unwrap());
         } else {
-            debug!("no resource metrics available");
-        };
-        // let name = match self.raw_data.get(0) {
-        //     Some(resource_metric) => return resource_metric,
-        //     None => None
-        // };
+            info!("Could not exract ScopeMetrics from raw data");
+        }
     }
 
+    pub fn get_scope_metric(&self) -> Option<ScopeMetrics> {
+        match self.raw_data.get(0) {
+            Some(rm) => {
+                match rm.scope_metrics.get(0) {
+                    Some(sm) => Some(sm.to_owned()),
+                    None => None,
+                } 
+            },
+            None => None,
+        }
+    }
 }

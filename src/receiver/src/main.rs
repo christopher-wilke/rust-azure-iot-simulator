@@ -1,7 +1,7 @@
 use std::net::Ipv4Addr;
 
 use async_trait::async_trait;
-use receiver::{proto::{collector::metrics::v1::{*, metrics_service_server::{MetricsService, MetricsServiceServer}}, metrics::v1::{Gauge, metric::Data}}, D2C_Extractor::{D2C_Extractor}};
+use receiver::{proto::{collector::metrics::v1::{*, metrics_service_server::{MetricsService, MetricsServiceServer}}}, D2C_Extractor::{D2cExtractor}};
 use tonic::{transport::Server, Response};
 
 pub struct MetricsEndpoint {}
@@ -23,12 +23,12 @@ impl MetricsService for MetricsEndpoint {
         request: tonic::Request<ExportMetricsServiceRequest>,
     ) -> Result<Response<ExportMetricsServiceResponse>, tonic::Status> {
         
-        let mut extractor = D2C_Extractor {
+        let mut extractor = D2cExtractor {
             raw_data: request.into_inner().resource_metrics,
             ..Default::default()
         };
 
-        extractor.extract_from_stream();
+        extractor.extract_scope_metric_from_stream();
 
         // message.extract_from_stream();
 
