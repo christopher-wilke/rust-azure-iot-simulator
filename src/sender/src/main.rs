@@ -86,7 +86,7 @@ pub fn gather_data() {
     let _ = meter
         .f64_value_observer(
             "temperature", 
-            |r| r.observe(1337.0, &[])
+            |r| r.observe(1337.6, &[])
         )
         .with_unit(Unit::new("Celsius"))
         .with_description("Current Temperature")
