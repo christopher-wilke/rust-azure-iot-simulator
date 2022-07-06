@@ -4,17 +4,7 @@ use async_trait::async_trait;
 use receiver::{proto::{collector::metrics::v1::{*, metrics_service_server::{MetricsService, MetricsServiceServer}}}, D2C_Extractor::{D2cExtractor}};
 use tonic::{transport::Server, Response};
 
-pub struct MetricsEndpoint {}
-
-impl MetricsEndpoint {
-    pub fn new() -> Self {
-        Self {}
-    }
-
-    pub fn create_d2c_message() {
-
-    }
-}
+pub struct MetricsEndpoint;
 
 #[async_trait]
 impl MetricsService for MetricsEndpoint {
@@ -24,7 +14,9 @@ impl MetricsService for MetricsEndpoint {
     ) -> Result<Response<ExportMetricsServiceResponse>, tonic::Status> {
         
         let mut extractor = D2cExtractor {
-            raw_data: request.into_inner().resource_metrics,
+            raw_data: request
+                .into_inner()
+                .resource_metrics,
             ..Default::default()
         };
 
@@ -65,7 +57,7 @@ pub async fn main() {
 
 async fn run_server() {
 
-    let metrics_importer = MetricsEndpoint::new();
+    let metrics_importer = MetricsEndpoint {};
     let addr = (Ipv4Addr::UNSPECIFIED, 4317).into();
 
     Server::builder()

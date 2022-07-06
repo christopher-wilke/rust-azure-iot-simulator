@@ -27,14 +27,6 @@ impl D2cExtractor {
 
             // let metrics = sm.unwrap().metrics;
             self.get_metric_data_point(sm.as_ref().unwrap());
-
-            // let name = sm
-            //     .as_ref()
-            //     .unwrap();
-            
-            // let metrics = &sm
-            //     .unwrap()
-            //     .metrics;
             
         } else {
             info!("Could not extract ScopeMetrics from raw data");
