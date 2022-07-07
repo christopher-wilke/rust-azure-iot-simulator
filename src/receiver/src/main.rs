@@ -1,7 +1,8 @@
 use std::net::Ipv4Addr;
 
 use async_trait::async_trait;
-use receiver::{proto::{collector::metrics::v1::{*, metrics_service_server::{MetricsService, MetricsServiceServer}}}, D2C_Extractor::{D2cExtractor}};
+use log::error;
+use receiver::{proto::{collector::metrics::v1::{*, metrics_service_server::{MetricsService, MetricsServiceServer}}}, data_extractor::DataExtractor};
 use tonic::{transport::Server, Response};
 
 pub struct MetricsEndpoint;
@@ -12,15 +13,26 @@ impl MetricsService for MetricsEndpoint {
         &self,
         request: tonic::Request<ExportMetricsServiceRequest>,
     ) -> Result<Response<ExportMetricsServiceResponse>, tonic::Status> {
-        
-        let mut extractor = D2cExtractor {
-            raw_data: request
-                .into_inner()
-                .resource_metrics,
-            ..Default::default()
-        };
 
-        extractor.extract_scope_metric_from_stream();
+        match DataExtractor::new(
+            request
+            .into_inner()
+            .resource_metrics
+        ) {
+            Ok(extractor) => {
+                let state = extractor.start();
+            },
+            Err(e) => error!("{e:?}"),
+        }
+
+        // let mut extractor = D2cExtractor {
+        //     raw_data: request
+        //         .into_inner()
+        //         .resource_metrics,
+        //     ..Default::default()
+        // };
+
+        // extractor.extract_scope_metric_from_stream();
 
         // message.extract_from_stream();
 

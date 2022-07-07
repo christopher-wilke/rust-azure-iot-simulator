@@ -1,2 +1,2 @@
-pub mod D2C_Extractor;
+pub mod data_extractor;
 pub mod proto;
