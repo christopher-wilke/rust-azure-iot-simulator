@@ -2,7 +2,7 @@ use std::{fmt::Display, error::Error};
 
 use error_stack::{IntoReport, Report, Result, ResultExt};
 
-use crate::proto::metrics::v1::ResourceMetrics;
+use crate::{proto::metrics::v1::{ResourceMetrics, metric::Data, number_data_point::Value}, instrumentation_scope::{InstrumentationDataPoint, InstrumentationMetric, InstrumentationScope}};
 
 #[derive(Debug)]
 pub struct ResourceMetricError;
@@ -33,11 +33,11 @@ impl DataExtractor {
         }
     }
 
-    pub fn start(&self) -> Result<String, ResourceMetricError> {
-        let name = self.get_name()?;
-        println!("name = {}", name);
-        
-        Ok("extraction successful".into())
+    pub fn start(&self) -> Result<InstrumentationScope, ResourceMetricError> {
+        Ok(InstrumentationScope {
+            name: self.get_name()?,
+            metric: self.get_metric()?
+        })
     }
 
     fn get_name(&self) -> Result<String, ResourceMetricError> {
@@ -46,11 +46,70 @@ impl DataExtractor {
                 match &scope_metric.scope {
                     Some(scope) => Ok(scope.name.to_owned()),
                     None => Err(Report::new(ResourceMetricError))
-                        .attach_printable(("No scope in scope_metric available"))
+                        .attach_printable("No scope in scope_metric available")
                 }
             },
             None => Err(Report::new(ResourceMetricError))
-                .attach_printable(("Cannot access scope metrics"))
+                .attach_printable("Cannot access scope metrics")
+        }
+    }
+
+    fn get_metric(&self) -> Result<InstrumentationMetric, ResourceMetricError> {
+        match self.resource_metrics.scope_metrics.get(0) {
+            Some(scope_metric) => {
+                match scope_metric.metrics.get(0) {
+                    Some(metric) => {
+                        Ok(InstrumentationMetric {
+                            name: metric.name.to_owned(),
+                            description: metric.description.to_owned(),
+                            unit: metric.unit.to_owned(),
+                            data_point: self.get_data_point()?
+                        })
+                    },
+                    None => Err(Report::new(ResourceMetricError))
+                        .attach_printable("No metric available")
+                }
+            },
+            None => Err(Report::new(ResourceMetricError))
+                        .attach_printable("No scope in scope_metric available")
+        }
+    }
+
+    fn get_data_point(&self) -> Result<InstrumentationDataPoint, ResourceMetricError> {
+        match self.resource_metrics.scope_metrics.get(0) {
+            Some(scope_metric) => {
+                match scope_metric.metrics.get(0) {
+                    Some(metric) => {
+                        match &metric.data {
+                            Some(Data::Gauge(gauge)) => {
+                                match gauge.data_points.get(0) {
+                                    Some(dp) => {
+                                        match dp.value {
+                                            Some(Value::AsDouble(value)) => 
+                                                Ok(InstrumentationDataPoint {
+                                                    start_time_unix_nano: dp.start_time_unix_nano,
+                                                    time_unix_nano: dp.time_unix_nano,
+                                                    value
+                                                }),
+                                                _ => Err(Report::new(ResourceMetricError))
+                                                        .attach_printable("Value (f64) not available")
+                                        }
+  
+                                    },
+                                    None => Err(Report::new(ResourceMetricError))
+                                        .attach_printable("Could not access gauge data point")
+                                }
+                            }
+                            _ => Err(Report::new(ResourceMetricError))
+                                .attach_printable("Could not access Gauge data")
+                        }
+                    },
+                    None => Err(Report::new(ResourceMetricError))
+                        .attach_printable("No metric available")
+                }
+            },
+            None => Err(Report::new(ResourceMetricError))
+                        .attach_printable("No scope in scope_metric available")
         }
     }
 
