@@ -1,6 +1,6 @@
 use std::{fmt::Display, error::Error};
 
-use error_stack::{IntoReport, Report, Result, ResultExt};
+use error_stack::{Report, Result, ResultExt};
 
 use crate::{proto::metrics::v1::{ResourceMetrics, metric::Data, number_data_point::Value}, instrumentation_scope::{InstrumentationDataPoint, InstrumentationMetric, InstrumentationScope}};
 

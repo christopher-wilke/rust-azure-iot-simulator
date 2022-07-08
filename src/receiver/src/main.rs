@@ -22,7 +22,8 @@ impl MetricsService for MetricsEndpoint {
             Ok(extractor) => {
                 match extractor.start() {
                     Ok(instrumentation_scope) => {
-                        println!("{instrumentation_scope:?}");
+                        let serialized_scope = serde_json::to_string(&instrumentation_scope).unwrap();
+                        println!("{serialized_scope}");
                     },
                     Err(e) => error!("{e:?}"),
                 }
