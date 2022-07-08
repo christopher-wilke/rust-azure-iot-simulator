@@ -1,6 +1,6 @@
 **/target
 .vscode
-configuration/base.yaml
+**/configuration/base.yaml
 */node_modules
 */dist
 */package-lock.json
