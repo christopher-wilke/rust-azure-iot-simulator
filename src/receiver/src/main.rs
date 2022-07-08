@@ -2,7 +2,7 @@ use std::net::Ipv4Addr;
 
 use async_trait::async_trait;
 use log::{error, debug};
-use receiver::{proto::{collector::metrics::v1::{*, metrics_service_server::{MetricsService, MetricsServiceServer}}}, data_extractor::DataExtractor, instrumentation_scope::convert_to_d2c_message, configuration::{IoTHubConfig, ConfigurationFile, ConfigurationFileError}};
+use receiver::{proto::{collector::metrics::v1::{*, metrics_service_server::{MetricsService, MetricsServiceServer}}}, data_extractor::DataExtractor, instrumentation_scope::convert_to_d2c_message, configuration::{IoTHubConfig, ConfigurationFile, ConfigurationFileError}, exporter::Exporter};
 use tonic::{transport::Server, Response};
 
 pub struct MetricsEndpoint;
@@ -22,9 +22,26 @@ impl MetricsService for MetricsEndpoint {
             Ok(extractor) => {
                 match extractor.start() {
                     Ok(instrumentation_scope) => {
-                        let serialized_scope = convert_to_d2c_message(&instrumentation_scope)
+                        let serialized_msg = convert_to_d2c_message(&instrumentation_scope)
                             .expect("Error while trying to convert to JSON message");
-                        println!("{serialized_scope}");
+
+                        let settings = IoTHubConfig::new().unwrap();
+
+                        let mut exporter = Exporter::new(
+                            &settings.iothub.hostname,
+                            &settings.device.device_id,
+                            &settings.device.shared_access_key
+                        ).await;
+
+                        println!("Sending -> {serialized_msg}");
+
+                        exporter.send_message(
+                            serialized_msg
+                            .as_bytes()
+                            .to_vec()
+                        )
+                        .await
+                        .unwrap();
                     },
                     Err(e) => error!("{e:?}"),
                 }
@@ -40,10 +57,8 @@ impl MetricsService for MetricsEndpoint {
 pub async fn main() -> Result<(), ConfigurationFileError> {
     env_logger::init();
 
-    let iot_hub_settings = IoTHubConfig::new().unwrap();
-    println!("{iot_hub_settings:?}");
-
-    // run_server().await;
+    run_server().await;
+    
     Ok(())
 }
 
