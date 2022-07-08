@@ -2,7 +2,7 @@ use std::net::Ipv4Addr;
 
 use async_trait::async_trait;
 use log::{error, debug};
-use receiver::{proto::{collector::metrics::v1::{*, metrics_service_server::{MetricsService, MetricsServiceServer}}}, data_extractor::DataExtractor, instrumentation_scope::convert_to_d2c_message, configuration::{IoTHubConfig, ConfigurationFile, get_settings, ConfigurationFileError}};
+use receiver::{proto::{collector::metrics::v1::{*, metrics_service_server::{MetricsService, MetricsServiceServer}}}, data_extractor::DataExtractor, instrumentation_scope::convert_to_d2c_message, configuration::{IoTHubConfig, ConfigurationFile, ConfigurationFileError}};
 use tonic::{transport::Server, Response};
 
 pub struct MetricsEndpoint;
@@ -40,7 +40,7 @@ impl MetricsService for MetricsEndpoint {
 pub async fn main() -> Result<(), ConfigurationFileError> {
     env_logger::init();
 
-    let iot_hub_settings = get_settings();
+    let iot_hub_settings = IoTHubConfig::new().unwrap();
     println!("{iot_hub_settings:?}");
 
     // run_server().await;
