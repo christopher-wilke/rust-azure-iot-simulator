@@ -1,8 +1,8 @@
 use std::net::Ipv4Addr;
 
 use async_trait::async_trait;
-use log::{error, info, debug};
-use receiver::{proto::{collector::metrics::v1::{*, metrics_service_server::{MetricsService, MetricsServiceServer}}}, data_extractor::DataExtractor};
+use log::{error, debug};
+use receiver::{proto::{collector::metrics::v1::{*, metrics_service_server::{MetricsService, MetricsServiceServer}}}, data_extractor::DataExtractor, instrumentation_scope::convert_to_d2c_message, configuration::{IoTHubConfig, ConfigurationFile, get_settings, ConfigurationFileError}};
 use tonic::{transport::Server, Response};
 
 pub struct MetricsEndpoint;
@@ -22,7 +22,8 @@ impl MetricsService for MetricsEndpoint {
             Ok(extractor) => {
                 match extractor.start() {
                     Ok(instrumentation_scope) => {
-                        let serialized_scope = serde_json::to_string(&instrumentation_scope).unwrap();
+                        let serialized_scope = convert_to_d2c_message(&instrumentation_scope)
+                            .expect("Error while trying to convert to JSON message");
                         println!("{serialized_scope}");
                     },
                     Err(e) => error!("{e:?}"),
@@ -36,10 +37,14 @@ impl MetricsService for MetricsEndpoint {
 }
 
 #[tokio::main]
-pub async fn main() {
+pub async fn main() -> Result<(), ConfigurationFileError> {
     env_logger::init();
 
-    run_server().await;
+    let iot_hub_settings = get_settings();
+    println!("{iot_hub_settings:?}");
+
+    // run_server().await;
+    Ok(())
 }
 
 async fn run_server() {
