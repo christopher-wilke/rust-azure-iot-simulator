@@ -5,6 +5,7 @@ use opentelemetry::metrics::Unit;
 use opentelemetry::sdk::metrics::{selectors, PushController};
 use opentelemetry::{metrics::{Meter, MetricsError, self}, sdk::{export::metrics::stdout::ExportBatch}, global};
 use opentelemetry_otlp::{ExportConfig, Protocol, WithExportConfig};
+use sender::simulator::get_new_item;
 use std::time::Duration;
 
 fn ctrl_channel() -> Result<Receiver<()>, ctrlc::Error> {
@@ -82,11 +83,12 @@ pub async fn main() {
 pub fn gather_data() {
     let _ = init_meter().expect("Error while trying to create meter");
     let meter = global::meter("rust-azure-iot-simulator");
+    let random_value = get_new_item().value;
 
     let _ = meter
         .f64_value_observer(
             "temperature", 
-            |r| r.observe(1337.6, &[])
+            move |r| r.observe(random_value, &[])
         )
         .with_unit(Unit::new("Celsius"))
         .with_description("Current Temperature")

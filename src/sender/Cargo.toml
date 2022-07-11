@@ -13,4 +13,5 @@ log = "~0.4.17"
 futures-util = { version = "0.3", default-features = false, features = ["std"] }
 opentelemetry = { version = "0.17.0", features = ["rt-tokio", "metrics"]}
 opentelemetry-otlp = { version = "0.10.0", features = ["tonic", "metrics"]}
+rand = "~0.8.5"
 tokio = { version = "1", features = ["full"] }
