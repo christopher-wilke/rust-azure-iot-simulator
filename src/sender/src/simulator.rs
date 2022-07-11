@@ -4,7 +4,6 @@ use std::{
 
 use rand::{thread_rng, Rng};
 
-
 const MIN_TEMP: f32 = 20.0;
 const MAX_TEMP: f32 = 25.0;
 

@@ -1,6 +1,5 @@
 use crossbeam_channel::{Receiver, bounded, tick, select};
 use futures_util::Stream;
-use log::debug;
 use opentelemetry::metrics::Unit;
 use opentelemetry::sdk::metrics::{selectors, PushController};
 use opentelemetry::{metrics::{Meter, MetricsError, self}, sdk::{export::metrics::stdout::ExportBatch}, global};
