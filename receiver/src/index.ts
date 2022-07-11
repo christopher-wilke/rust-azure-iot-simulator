@@ -12,7 +12,8 @@ export async function main(): Promise<void> {
         {
           processEvents: async (events, context) => {
             for (const event of events) {
-              console.log(`${event.body}`);
+              let body = JSON.stringify(event.body)
+              console.log(`${body}`);
             }
           },
           processError: async (err, context) => {
