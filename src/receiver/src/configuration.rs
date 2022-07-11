@@ -1,7 +1,7 @@
 use std::{fmt::Display, path::PathBuf};
 
-use config::{Config};
-use error_stack::{IntoReport, Result, ResultExt, Report};
+use config::Config;
+use error_stack::{IntoReport, Report, Result, ResultExt};
 
 #[derive(Debug, serde::Deserialize)]
 pub struct Settings {
@@ -38,21 +38,17 @@ pub trait ConfigurationFile {
     fn get_base_path() -> Result<PathBuf, ConfigurationFileError>;
     fn get_configuration_directory(
         base_path: PathBuf,
-        sub_folder: String, 
-        file: String
+        sub_folder: String,
+        file: String,
     ) -> Result<PathBuf, ConfigurationFileError>;
     fn get_deserialized_settings(config_file: PathBuf) -> Result<Settings, ConfigurationFileError>;
 }
 
 impl ConfigurationFile for IoTHubConfig {
-
     fn get_deserialized_settings(config_file: PathBuf) -> Result<Settings, ConfigurationFileError> {
         let cfg = Config::builder()
             .add_source(config::File::with_name(
-                config_file
-                    .as_os_str()
-                    .to_str()
-                    .unwrap()
+                config_file.as_os_str().to_str().unwrap(),
             ))
             .build()
             .expect("Error while trying to create the Configuration Struct");
@@ -60,9 +56,7 @@ impl ConfigurationFile for IoTHubConfig {
         cfg.try_deserialize::<Settings>()
             .report()
             .change_context(ConfigurationFileError)
-            .attach_printable(
-                format!("Could not deserialze the configuration struct")
-            )
+            .attach_printable(format!("Could not deserialze the configuration struct"))
     }
 
     fn get_base_path() -> Result<PathBuf, ConfigurationFileError> {
@@ -74,12 +68,10 @@ impl ConfigurationFile for IoTHubConfig {
 
     fn get_configuration_directory(
         base_path: PathBuf,
-        sub_folder: String, 
-        file: String
+        sub_folder: String,
+        file: String,
     ) -> Result<PathBuf, ConfigurationFileError> {
-        let path_buf = base_path
-            .join(sub_folder.clone())
-            .join(file.clone());
+        let path_buf = base_path.join(sub_folder.clone()).join(file.clone());
 
         if path_buf.exists() {
             Ok(path_buf)
@@ -89,7 +81,7 @@ impl ConfigurationFile for IoTHubConfig {
                 .attach_printable(
                     format!("./{sub_folder}/{file} not available. Make sure to create the file and insert the values.")
                 )
-            )
+            );
         }
     }
 }
@@ -98,9 +90,9 @@ impl IoTHubConfig {
     pub fn new() -> Result<Settings, ConfigurationFileError> {
         let base_path = IoTHubConfig::get_base_path()?;
         let cfg_file = IoTHubConfig::get_configuration_directory(
-            base_path, 
-            "configuration".to_string(), 
-            "base.yaml".to_string()
+            base_path,
+            "configuration".to_string(),
+            "base.yaml".to_string(),
         )?;
         let settings = IoTHubConfig::get_deserialized_settings(cfg_file)?;
         Ok(settings)

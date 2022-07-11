@@ -1,7 +1,7 @@
-use azure_iot_sdk::{IoTHubClient, DeviceKeyTokenSource, Message};
+use azure_iot_sdk::{DeviceKeyTokenSource, IoTHubClient, Message};
 
 pub struct Exporter {
-    client: IoTHubClient
+    client: IoTHubClient,
 }
 
 impl Exporter {
