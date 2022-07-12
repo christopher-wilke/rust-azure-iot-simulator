@@ -4,36 +4,19 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-azure_iot_sdk = { version = "~0.8.0", features=["https-transport"] }
-crossbeam-channel = "0.5.5"
-ctrlc = "3.2.2"
-env_logger = "~0.9.0"
+async-trait = "0.1"
+env_logger = "0.9.0"
 futures-util = { version = "0.3", default-features = false, features = ["std"] }
-lazy_static = "1.4"
-log = "~0.4.17"
-openssl = { version = "0.10", features = ["vendored"] }
-opentelemetry = "0.17.0"
-opentelemetry-jaeger = "0.16.0"
+log = "0.4.17"
+opentelemetry = { version = "0.17.0", features = ["rt-tokio", "metrics"]}
+opentelemetry-otlp = { version = "0.10.0", features = ["tonic", "metrics"]}
 prost = "0.9"
-rand = "~0.8.5"
+rand = "0.8.5"
 serde = { version = "1", features = ["derive"] }
-serde_json = "1.0"
-time = "~0.3.9"
+serde_json = "1.0.82"
 tokio = { version = "1", features = ["full"] }
-tonic = "0.6.2"
-
-[dependencies.config]
-version = "~0.13.1"
-default-features = false
-features = ["yaml"]
-
-[profile.release]
-strip = true
-opt-level = "z"
-lto = true
-codegen-units = 1
-panic = "abort"
+tonic = "0.6"
 
 [build-dependencies]
 anyhow = "1"
-tonic-build = "0.6.2"
+tonic-build = "0.6"

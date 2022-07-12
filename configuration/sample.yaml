@@ -1,0 +1,5 @@
+iothub:
+    hostname: "<your iot hub>.azure-devices.net"
+device:
+    device_id: "Device001"
+    shared_access_key: "<your sas device key>"
