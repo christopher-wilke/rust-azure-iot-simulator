@@ -5,7 +5,10 @@ edition = "2021"
 
 [dependencies]
 async-trait = "0.1"
+azure_iot_sdk = { version = "~0.8.0", features=["https-transport"] }
+config = { version = "0.13.1", default-features = false, features = ["yaml"] }
 env_logger = "0.9.0"
+error-stack = "0.1.1"
 futures-util = { version = "0.3", default-features = false, features = ["std"] }
 log = "0.4.17"
 opentelemetry = { version = "0.17.0", features = ["rt-tokio", "metrics"]}

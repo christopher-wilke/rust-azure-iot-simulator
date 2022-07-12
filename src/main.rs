@@ -1,6 +1,6 @@
 use std::net::Ipv4Addr;
 use async_trait::async_trait;
-use log::{info, debug};
+use log::{info, debug, error};
 use tokio::{
     select,
     signal::unix::{signal, SignalKind},
@@ -9,7 +9,7 @@ use tokio::{
 use tonic::{transport::Server, Response};
 use rust_azure_iot_simulator::{proto::collector::metrics::v1::{metrics_service_server::{
     MetricsService, MetricsServiceServer
-}, ExportMetricsServiceResponse, ExportMetricsServiceRequest}, sender::gather_data};
+}, ExportMetricsServiceResponse, ExportMetricsServiceRequest}, sender::gather_data, data_extractor::DataExtractor, instrumentation_scope::convert_to_d2c_message, configuration::IoTHubConfig, exporter::Exporter};
 
 
 pub struct MetricsEndpoint;
@@ -22,6 +22,34 @@ impl MetricsService for MetricsEndpoint {
     ) 
     -> Result<tonic::Response<ExportMetricsServiceResponse>,tonic::Status> {
         debug!("Async trait: incoming {request:?}");
+        
+        match DataExtractor::new(request.into_inner().resource_metrics) {
+            Ok(extractor) => match extractor.start() {
+                Ok(instrumentation_scope) => {
+                    let serialized_msg = convert_to_d2c_message(&instrumentation_scope)
+                        .expect("Error while trying to convert to JSON message");
+
+                    let settings = IoTHubConfig::new().unwrap();
+
+                    let mut exporter = Exporter::new(
+                        &settings.iothub.hostname,
+                        &settings.device.device_id,
+                        &settings.device.shared_access_key,
+                    )
+                    .await;
+
+                    info!("Sending -> {serialized_msg}");
+
+                    exporter
+                        .send_message(serialized_msg.as_bytes().to_vec())
+                        .await
+                        .unwrap();
+                }
+                Err(e) => error!("{e:?}"),
+            },
+            Err(e) => debug!("{e:?}"),
+        }
+
         Ok(Response::new(ExportMetricsServiceResponse {}))
     }
 }
