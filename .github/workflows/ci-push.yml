@@ -11,6 +11,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Initialize submodules
+      run: git submodule update --recursive --init
     - uses: actions-rs/toolchain@v1
       with:
         toolchain: stable
