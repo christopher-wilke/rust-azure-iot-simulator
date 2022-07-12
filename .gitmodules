@@ -1,12 +1,3 @@
-[submodule "src/lib/opentelemetry-proto"]
-	path = src/lib/opentelemetry-proto
-	url = https://github.com/open-telemetry/opentelemetry-proto
-[submodule "src/receiver/lib/opentelemetry-proto"]
-	path = src/receiver/lib/opentelemetry-proto
-	url = https://github.com/open-telemetry/opentelemetry-proto
-[submodule "lib/--force"]
-	path = lib/--force
-	url = https://github.com/open-telemetry/opentelemetry-proto
 [submodule "lib/opentelemetry-proto"]
 	path = lib/opentelemetry-proto
 	url = https://github.com/open-telemetry/opentelemetry-proto
