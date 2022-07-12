@@ -1,29 +1,16 @@
 use std::time::Duration;
 
 use futures_util::Stream;
-use log::{debug, info};
-use opentelemetry::{metrics::{Meter, MetricsError, self, Unit}, sdk::{export::metrics::stdout::ExportBatch, metrics::{PushController, selectors}}, global};
+use log::{info};
+use opentelemetry::{metrics::{MetricsError, self, Unit}, sdk::{export::metrics::stdout::ExportBatch, metrics::{PushController, selectors}}, global};
 use opentelemetry_otlp::{ExportConfig, Protocol, WithExportConfig};
 
 use crate::simulator::get_new_item;
 
-pub struct MetricsController {
-    meter: Meter
-}
+pub struct MetricsController {}
 
 pub fn custom_formatter(batch: ExportBatch) -> Result<String, MetricsError> {
     Ok(format!("{:?}", batch))
-}
-
-impl MetricsController {
-    pub fn default() -> Self {
-        opentelemetry::sdk::export::metrics::stdout(tokio::spawn, delayed_interval)
-            .with_formatter(custom_formatter)
-            .init();
-        
-        let meter = global::meter("rust-azure-iot-simulator");
-        Self { meter }
-    }
 }
 
 fn delayed_interval(duration: Duration) -> impl Stream<Item = tokio::time::Instant> {
