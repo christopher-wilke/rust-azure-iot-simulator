@@ -56,14 +56,14 @@ impl ConfigurationFile for IoTHubConfig {
         cfg.try_deserialize::<Settings>()
             .report()
             .change_context(ConfigurationFileError)
-            .attach_printable(format!("Could not deserialze the configuration struct"))
+            .attach_printable("Could not deserialze the configuration struct")
     }
 
     fn get_base_path() -> Result<PathBuf, ConfigurationFileError> {
         std::env::current_dir()
             .report()
             .change_context(ConfigurationFileError)
-            .attach_printable(format!("Could not read the base path"))
+            .attach_printable("Could not read the base path")
     }
 
     fn get_configuration_directory(
@@ -87,7 +87,7 @@ impl ConfigurationFile for IoTHubConfig {
 }
 
 impl IoTHubConfig {
-    pub fn new() -> Result<Settings, ConfigurationFileError> {
+    pub fn get_settings() -> Result<Settings, ConfigurationFileError> {
         let base_path = IoTHubConfig::get_base_path()?;
         let cfg_file = IoTHubConfig::get_configuration_directory(
             base_path,

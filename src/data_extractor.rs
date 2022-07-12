@@ -32,7 +32,7 @@ impl DataExtractor {
                 resource_metrics: rm.clone(),
             }),
             None => {
-                Err(Report::new(ResourceMetricError)).attach_printable(format!("raw_data is empty"))
+                Err(Report::new(ResourceMetricError)).attach_printable("raw_data is empty")
             }
         }
     }

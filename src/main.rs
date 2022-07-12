@@ -35,7 +35,7 @@ impl MetricsService for MetricsEndpoint {
                     let serialized_msg = convert_to_d2c_message(&instrumentation_scope)
                         .expect("Error while trying to convert to JSON message");
 
-                    let settings = IoTHubConfig::new().unwrap();
+                    let settings = IoTHubConfig::get_settings().unwrap();
 
                     let mut exporter = Exporter::new(
                         &settings.iothub.hostname,
