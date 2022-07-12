@@ -1,6 +1,4 @@
-use std::{
-    fmt,
-};
+use std::fmt;
 
 use rand::{thread_rng, Rng};
 
@@ -14,9 +12,7 @@ pub struct Temperature {
 
 impl Default for Temperature {
     fn default() -> Self {
-        Self {
-            value: 0.,
-        }
+        Self { value: 0. }
     }
 }
 
@@ -30,7 +26,5 @@ pub fn get_new_item() -> Temperature {
     let mut rng = thread_rng();
     let value = rng.gen_range(MIN_TEMP..MAX_TEMP).into();
 
-    Temperature {
-        value
-    }
+    Temperature { value }
 }

@@ -1,16 +1,23 @@
-use std::net::Ipv4Addr;
 use async_trait::async_trait;
-use log::{info, debug, error};
+use log::{debug, error, info};
+use rust_azure_iot_simulator::{
+    configuration::IoTHubConfig,
+    data_extractor::DataExtractor,
+    exporter::Exporter,
+    instrumentation_scope::convert_to_d2c_message,
+    proto::collector::metrics::v1::{
+        metrics_service_server::{MetricsService, MetricsServiceServer},
+        ExportMetricsServiceRequest, ExportMetricsServiceResponse,
+    },
+    sender::gather_data,
+};
+use std::net::Ipv4Addr;
 use tokio::{
     select,
     signal::unix::{signal, SignalKind},
     time::sleep,
 };
 use tonic::{transport::Server, Response};
-use rust_azure_iot_simulator::{proto::collector::metrics::v1::{metrics_service_server::{
-    MetricsService, MetricsServiceServer
-}, ExportMetricsServiceResponse, ExportMetricsServiceRequest}, sender::gather_data, data_extractor::DataExtractor, instrumentation_scope::convert_to_d2c_message, configuration::IoTHubConfig, exporter::Exporter};
-
 
 pub struct MetricsEndpoint;
 
@@ -18,11 +25,10 @@ pub struct MetricsEndpoint;
 impl MetricsService for MetricsEndpoint {
     async fn export(
         &self,
-        request:tonic::Request<ExportMetricsServiceRequest>
-    ) 
-    -> Result<tonic::Response<ExportMetricsServiceResponse>,tonic::Status> {
+        request: tonic::Request<ExportMetricsServiceRequest>,
+    ) -> Result<tonic::Response<ExportMetricsServiceResponse>, tonic::Status> {
         debug!("Async trait: incoming {request:?}");
-        
+
         match DataExtractor::new(request.into_inner().resource_metrics) {
             Ok(extractor) => match extractor.start() {
                 Ok(instrumentation_scope) => {

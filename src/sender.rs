@@ -1,8 +1,15 @@
 use std::time::Duration;
 
 use futures_util::Stream;
-use log::{info};
-use opentelemetry::{metrics::{MetricsError, self, Unit}, sdk::{export::metrics::stdout::ExportBatch, metrics::{PushController, selectors}}, global};
+use log::info;
+use opentelemetry::{
+    global,
+    metrics::{self, MetricsError, Unit},
+    sdk::{
+        export::metrics::stdout::ExportBatch,
+        metrics::{selectors, PushController},
+    },
+};
 use opentelemetry_otlp::{ExportConfig, Protocol, WithExportConfig};
 
 use crate::simulator::get_new_item;
@@ -18,7 +25,6 @@ fn delayed_interval(duration: Duration) -> impl Stream<Item = tokio::time::Insta
 }
 
 fn init_meter() -> metrics::Result<PushController> {
-
     let export_config = ExportConfig {
         endpoint: "http://localhost:4317".into(),
         protocol: Protocol::Grpc,
@@ -29,8 +35,8 @@ fn init_meter() -> metrics::Result<PushController> {
         .metrics(tokio::spawn, delayed_interval)
         .with_exporter(
             opentelemetry_otlp::new_exporter()
-            .tonic()
-            .with_export_config(export_config)
+                .tonic()
+                .with_export_config(export_config),
         )
         .with_aggregator_selector(selectors::simple::Selector::Exact)
         .build()
@@ -44,10 +50,7 @@ pub fn gather_data() {
     info!("Generated random value: {random_value}");
 
     let _ = meter
-        .f64_value_observer(
-            "temperature", 
-            move |r| r.observe(random_value, &[])
-        )
+        .f64_value_observer("temperature", move |r| r.observe(random_value, &[]))
         .with_unit(Unit::new("Celsius"))
         .with_description("Current Temperature")
         .init();
