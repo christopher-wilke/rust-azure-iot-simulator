@@ -1,0 +1,18 @@
+{
+  "name": "c2d-visualizer",
+  "version": "1.0.0",
+  "description": "Simple Visualizer for C2D Messages",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack-cli ./src/index.js -o ./dist/app.js",
+    "start": "http-server ./"
+  },
+  "devDependencies": {
+    "http-server": "^0.12.1",
+    "rimraf": "^3.0.0",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10"
+  },
+  "author": "Christopher Wilke",
+  "license": "ISC"
+}
