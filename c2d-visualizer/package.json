@@ -4,8 +4,11 @@
   "description": "Simple Visualizer for C2D Messages",
   "main": "index.js",
   "scripts": {
-    "build": "webpack-cli ./src/index.js -o ./dist/app.js",
+    "build": "webpack-cli --mode=development ./src/index.js -o ./dist/app.js",
     "start": "http-server ./"
+  },
+  "dependencies": {
+    "@azure/event-hubs": "latest"
   },
   "devDependencies": {
     "http-server": "^0.12.1",

@@ -1,11 +1,48 @@
 <!DOCTYPE html>
 <head>
     <title>Cloud-to-Device Visualizer</title>
+    <style>
+      * {
+        font-family: Arial, Helvetica, sans-serif;
+        box-sizing: border-box;
+      }
+
+      .box {
+        display: flex;
+      }
+
+      .box > * {
+        flex: 1 1 auto;
+      }
+
+      button.btn {
+        flex: 1 1 auto;
+      }
+    </style>
 </head>
 <body>
-    Welcome to the official C2D Visualizer :)
+    <h4>Welcome to the C2D Visualizer</h4>
+    <div class="box">
+      <button 
+        id="receive" 
+        class="btn"
+        type="button"
+      >
+        Receive C2D Messages
+      </button>
+    </div>
     <div>
-        <label>Received Events: </label>
+        <label for="receiveContent">Received Messages</label>
+        <div class="box">
+            <textarea 
+                id="receiveContent" 
+                name="receiveContent" 
+                rows="10" 
+                readonly
+            >
+            </textarea>
+        </div>
     </div>
 </body>
+<script src="./dist/app.js"></script>
 </html>
