@@ -20,6 +20,7 @@ pub struct InstrumentationDataPoint {
     pub start_time_unix_nano: u64,
     pub time_unix_nano: u64,
     pub value: f64,
+    pub current_time_unix: u128
 }
 
 pub fn convert_to_d2c_message<T>(instrumentation_scope: T) -> Result<String, Error>

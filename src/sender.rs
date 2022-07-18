@@ -4,6 +4,7 @@ use futures_util::Stream;
 use log::info;
 use opentelemetry::{
     global,
+    KeyValue,
     metrics::{self, MetricsError, Unit},
     sdk::{
         export::metrics::stdout::ExportBatch,
@@ -12,7 +13,7 @@ use opentelemetry::{
 };
 use opentelemetry_otlp::{ExportConfig, Protocol, WithExportConfig};
 
-use crate::simulator::get_new_item;
+use crate::{simulator::get_new_item};
 
 pub struct MetricsController {}
 
@@ -50,7 +51,9 @@ pub fn gather_data() {
     info!("Generated random value: {random_value}");
 
     let _ = meter
-        .f64_value_observer("temperature", move |r| r.observe(random_value, &[]))
+        .f64_value_observer("temperature", move |r| r.observe(random_value, &[
+            KeyValue::new("DateTime", 1337)
+        ]))
         .with_unit(Unit::new("Celsius"))
         .with_description("Current Temperature")
         .init();
