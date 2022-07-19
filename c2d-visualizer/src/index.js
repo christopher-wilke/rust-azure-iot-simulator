@@ -15,7 +15,6 @@ async function receive_c2d_messages() {
         {
           processEvents: async (events, context) => {
             for (const event of events) {
-              let body = JSON.stringify(event.body)
               process_incoming_data(event.body)
             }
           },
@@ -29,8 +28,6 @@ async function receive_c2d_messages() {
 
 const contentContainer = document.getElementById("receiveContent");
 function process_incoming_data(body) {
-    console.log(body);
-
     let c2d_message = {
         name: body.name,
         metric: {
@@ -38,15 +35,22 @@ function process_incoming_data(body) {
             description: body.metric.description,
             unit: body.metric.unit,
             data_point: {
-                start_time_unix_nano: format_unix_time(body.metric.data_point.start_time_unix_nano)
+                start_time_unix_nano: body.metric.data_point.start_time_unix_nano,
+                value: body.metric.data_point.value,
+                arrived_at: new Date(body.metric.data_point.current_time_unix ? body.metric.data_point.current_time_unix : null)
             }
         }
     }
-    contentContainer.value = `${JSON.stringify(c2d_message)}\n`;
-}
+    contentContainer.value = `${JSON.stringify(c2d_message)}`;
 
-function format_unix_time(unix_timestamp) {
-    const milliseconds = unix_timestamp*1000
-    const dateObject = new Date(milliseconds)
-    return dateObject.toLocaleDateString()
+    if(JSON.parse(localStorage.getItem("c2d_data")) !== null) {
+      let item_list = JSON.parse(localStorage.getItem("c2d_data"))
+      item_list.push({
+        dateTime: c2d_message.metric.data_point.arrived_at,
+        value: c2d_message.metric.data_point.value
+      })
+      localStorage.setItem("c2d_data", JSON.stringify(item_list))
+    } else {
+      localStorage.setItem("c2d_data", JSON.stringify([]))
+    }
 }

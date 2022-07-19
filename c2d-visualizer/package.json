@@ -8,7 +8,8 @@
     "start": "http-server ./"
   },
   "dependencies": {
-    "@azure/event-hubs": "latest"
+    "@azure/event-hubs": "latest",
+    "chart.js": "^3.8.0"
   },
   "devDependencies": {
     "http-server": "^0.12.1",
