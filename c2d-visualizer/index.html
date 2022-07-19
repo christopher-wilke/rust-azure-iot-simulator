@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <title>Cloud-to-Device Visualizer</title>
     <style>
       * {
@@ -18,6 +19,10 @@
       button.btn {
         flex: 1 1 auto;
       }
+
+      .receiveContent {
+        width: 100%
+      }
     </style>
 </head>
 <body>
@@ -32,17 +37,76 @@
       </button>
     </div>
     <div>
-        <label for="receiveContent">Received Messages</label>
+        <label for="receiveContent">Latest Message</label>
         <div class="box">
+          <form>
             <textarea 
                 id="receiveContent" 
-                name="receiveContent" 
-                rows="10" 
-                readonly
-            >
-            </textarea>
+                name="receiveContent"
+                class="receiveContent"
+                rows="2"
+                oninput="input_changed()"
+              >
+              </textarea>
+          </form>
         </div>
     </div>
+    <div>
+      Line chart only renders data within the last 5 minutes
+    </div>
+    <canvas id="canvasChart" width="100%" height="10"></canvas>
+    <script>
+      const ctx = document.getElementById('canvasChart').getContext('2d');
+
+      const chart_labels = []
+      const chart_data = []
+
+      const myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: chart_labels,
+              datasets: [{
+                label: 'Simulated Device Temperature',
+                data: chart_data,
+                fill: false,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+              }]
+            }
+      });
+
+      function delay(time) {
+        return new Promise(resolve => setTimeout(resolve, time));
+      }
+
+      async function read_data() {
+        while(true) {
+          let items = JSON.parse(localStorage.getItem("c2d_data"));
+          if(items && items[items.length-1].dateTime) {
+            let last_item = items[items.length-1];
+
+            // Convert data for chart.js
+            let date_time = new Date(last_item.dateTime);
+            let x_axis = `${date_time.getHours()}:${date_time.getMinutes()}:${date_time.getSeconds()}`;
+            let temperature = last_item.value;
+
+            // Check if data already exists
+            let last_chart_label_item = chart_labels[chart_labels.length-1];
+            if(last_chart_label_item !== x_axis && Date.now() - date_time <= (5*60*1000)) {
+              chart_labels.push(x_axis);
+              chart_data.push(temperature);
+              myChart.update();
+            }
+          }
+          else {
+            console.log('no data available')
+          }
+          await delay(2000);
+        }
+      }
+
+      read_data();
+    </script>
 </body>
 <script src="./dist/app.js"></script>
 </html>
