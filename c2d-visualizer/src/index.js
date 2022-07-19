@@ -5,9 +5,9 @@ const rcvBtn = document.getElementById("receive")
 rcvBtn.addEventListener("click", () => {
     receive_c2d_messages();
 })
-
+ 
 async function receive_c2d_messages() {
-    const connectionString = "Endpoint=sb://iothub-ns-rust-azure-19491203-ed62575ad7.servicebus.windows.net/;SharedAccessKeyName=iothubowner;SharedAccessKey=llYTSfAkHWnHh/T3Xyt58l6e4Zb/+YfRT7e/C8OolsU=;EntityPath=rust-azure-iot-simulator";
+    const connectionString = "<Your Device Connection String>";
     const consumerGroup = "";
     const consumerClient = new EventHubConsumerClient(consumerGroup, connectionString);
 

@@ -56,6 +56,7 @@
     </div>
     <canvas id="canvasChart" width="100%" height="10"></canvas>
     <script>
+      localStorage.removeItem('c2d_data')
       const ctx = document.getElementById('canvasChart').getContext('2d');
 
       const chart_labels = []
