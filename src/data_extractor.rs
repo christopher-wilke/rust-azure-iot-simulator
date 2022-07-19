@@ -1,4 +1,4 @@
-use std::{error::Error, fmt::Display};
+use std::{error::Error, fmt::Display, time::{SystemTime, UNIX_EPOCH}};
 
 use error_stack::{Report, Result, ResultExt};
 
@@ -72,6 +72,13 @@ impl DataExtractor {
         }
     }
 
+    pub fn current_time(&self) -> u128 {
+        SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .expect("could not retrieve current system date time")
+            .as_millis()
+    }
+
     fn get_data_point(&self) -> Result<InstrumentationDataPoint, ResourceMetricError> {
         match self.resource_metrics.scope_metrics.get(0) {
             Some(scope_metric) => match scope_metric.metrics.get(0) {
@@ -82,6 +89,7 @@ impl DataExtractor {
                                 start_time_unix_nano: dp.start_time_unix_nano,
                                 time_unix_nano: dp.time_unix_nano,
                                 value,
+                                current_time_unix: self.current_time()
                             }),
                             _ => Err(Report::new(ResourceMetricError))
                                 .attach_printable("Value (f64) not available"),
@@ -101,3 +109,4 @@ impl DataExtractor {
         }
     }
 }
+
