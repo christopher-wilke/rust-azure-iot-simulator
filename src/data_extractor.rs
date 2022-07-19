@@ -1,4 +1,8 @@
-use std::{error::Error, fmt::Display, time::{SystemTime, UNIX_EPOCH}};
+use std::{
+    error::Error,
+    fmt::Display,
+    time::{SystemTime, UNIX_EPOCH},
+};
 
 use error_stack::{Report, Result, ResultExt};
 
@@ -89,7 +93,7 @@ impl DataExtractor {
                                 start_time_unix_nano: dp.start_time_unix_nano,
                                 time_unix_nano: dp.time_unix_nano,
                                 value,
-                                current_time_unix: self.current_time()
+                                current_time_unix: self.current_time(),
                             }),
                             _ => Err(Report::new(ResourceMetricError))
                                 .attach_printable("Value (f64) not available"),
@@ -109,4 +113,3 @@ impl DataExtractor {
         }
     }
 }
-
