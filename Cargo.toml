@@ -11,6 +11,7 @@ env_logger = "0.9.0"
 error-stack = "0.1.1"
 futures-util = { version = "0.3", default-features = false, features = ["std"] }
 log = "0.4.17"
+openssl = { version = "0.10.29", features = ["vendored"] }
 opentelemetry = { version = "0.17.0", features = ["rt-tokio", "metrics"]}
 opentelemetry-otlp = { version = "0.10.0", features = ["tonic", "metrics"]}
 prost = "0.9"
