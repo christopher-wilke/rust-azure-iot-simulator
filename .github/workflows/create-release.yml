@@ -13,12 +13,12 @@ jobs:
     strategy:
       matrix:
         include:
-        # - build: arm-v7
-        #   os: ubuntu-latest
-        #   rust: stable
-        #   target: armv7-unknown-linux-gnueabihf
-        #   linker: gcc-arm-linux-gnueabihf
-        #   cross: true
+        - build: arm-v7
+          os: ubuntu-latest
+          rust: stable
+          target: armv7-unknown-linux-gnueabihf
+          linker: gcc-arm-linux-gnueabihf
+          cross: true
         - build: x86_64
           os: ubuntu-latest
           rust: stable
