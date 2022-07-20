@@ -34,7 +34,7 @@ az group create --name MyResourceGroup --location {your region}
 az iot hub create --resource-group MyResourceGroup --name {YourIoTHubName}
 ```
 
-### Create the Azure IoT Hub Device
+### Create the Azure IoT Hub Device and retrieve the Connection String
 1. In the CLI session, run the `az iot hub device-identiy create` command which creates a device identitiy.
 
 ```sh
@@ -43,6 +43,32 @@ az iot hub device-identity create -d simDevice -n {YourIoTHubName}
 
 2. When you are ready to set up your device, you need the connection string that links your phyiscal device with its identity in the IoT Hub. Use the `` 
 
+## Run the App on your device
+You can clone and build the code locally or simply download and run one of the [release binaries](https://github.com/christopher-wilke/rust-azure-iot-simulator/releases) (we currently provide `armv7` for Raspberry Pi or `x86_64` for classic Ubuntu VMs). As this prject is all about learning Rust and its ecosystem, we will walk through the local cloning and building process. The following steps were being tested on `Ubuntu 20.04.4 LTS`.
+
+### Install Rust
+1. Before installing Rust, we need to ensure our system packages and repositories are updated.
+
+```sh
+sudo apt-get update && sudo apt-get upgrade
+```
+
+2. Once we have our system updated and ready, we can install the Rust compiler. I prefer the Rustup installer script (`default` settings).
+
+```sh
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+3. Once the installation is complete, add the Rust development environment to your system path using the source command. The `~/.cargo/bin` directory holds the tools for Rust development, including the rustc command, rustup, cargo, etc.
+
+```sh
+source $HOME/.cargo/bin
+```
+
+4. Run the following command to verify that Rust was successfully installed.
+
+```sh
+rustc --version
+```
 
 # Visualize Iot Hub Device Data
 
