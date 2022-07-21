@@ -71,9 +71,41 @@ source $HOME/.cargo/bin
 ```sh
 rustc --version
 ```
+### Run the Device App
+Before compiling and running the app, we need to make sure that all related artifacts are available. 
+
+1. Clone the solution using your preferred git client
+
+```sh
+git clone https://github.com/christopher-wilke/rust-azure-iot-simulator
+```
+2. Pull the `opentelemetry-proto` submodule, you will find the files in the `lib` folder
+
+```sh
+git submodule update --recursive --init
+```
+
+3. Rename the file `sample.yaml` to `base.yaml` in the `configuration` folder and update the device settings.
+
+```sh
+sudo mv ./configuration/sample.yaml ./configuration/base.yaml
+```
+
+4. Run the App (optional: use `debug` log level to get further log insights)
+
+```sh
+RUST_LOG=debug cargo run
+```
+
+Depending on your hardware architecture, the first time you compile the app can take some time. You will get there!
 
 # Visualize Iot Hub Device Data
+There are multiple ways to visualize or retrieve streams from the IoT Hub. We will discuss two options.
 
+## Watch JSON string in VSCode
+1. Make sure to install the [Azure IoT Tools Extensions](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.azure-iot-tools)
+
+## Run the Web App on your Machine
 
 # To do:
 
