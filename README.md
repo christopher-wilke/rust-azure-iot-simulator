@@ -102,8 +102,15 @@ Depending on your hardware architecture, the first time you compile the app can 
 # Visualize Iot Hub Device Data
 There are multiple ways to visualize or retrieve streams from the IoT Hub. We will discuss two options.
 
-## Watch JSON string in VSCode
+## Watch C2D Messages in Visual Studio Code
 1. Make sure to install the [Azure IoT Tools Extensions](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.azure-iot-tools)
+2. In `Explorer` view of VS Code, expand Azure IoT Hub Devices section in the bottom left corner
+3. Click `Select IoT Hub` in context menu
+4. After you sign in, your Azure Subscription list will be shown, then select Azure Subscription and IoT Hub
+5. The device list will be shown in Azure IoT Hub Devices tab in a few seconds
+6. Right-click your device and select `Start Monitoring Built-in Event Endpoint`
+7. The monitored messages will be shown in `OUTPUT > Azure IoT Hub view`
+8. To stop monitoring, right-click the `OUTPUT` view and select `Stop Monitoring Built-in Event Endpoint`
 
 ## Run the Web App on your Machine
 ![Rust on Embedded Device](images/Web_App.jpg)
