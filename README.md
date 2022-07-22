@@ -1,4 +1,4 @@
-![alt text](images/Rust_on_embedded_device.jpg)
+![Rust on Embedded Device](images/Rust_on_embedded_device.jpg)
 
 # Motivation
 There are several [Azure IoT device simulators](https://docs.microsoft.com/de-de/azure/iot-hub/quickstart-control-device?pivots=programming-language-csharp) written in different languages (e.g., C#, Node.js, Python, etc.) available. However, the embedded industry focuses on performance, binary size, and safety. This might be an issue for classical OOP-oriented languages. 
@@ -106,6 +106,29 @@ There are multiple ways to visualize or retrieve streams from the IoT Hub. We wi
 1. Make sure to install the [Azure IoT Tools Extensions](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.azure-iot-tools)
 
 ## Run the Web App on your Machine
+![Rust on Embedded Device](images/Web_App.jpg)
+I created a simple web application which visualizes incoming data in a line chart provided by [chart.js](https://www.chartjs.org/).
+
+1. Open your IoT Hub Instance on [Azure](portal.azure.com) and open the tab `Built-in endpoints`. Copy the `Event Hub-compatible endpoint`.
+2. CD into `c2d-visualizer` and open `index.js` located in the `src` folder. Insert the Connection String in `Line 10`. 
+3. Install Node and NPM
+```sh
+sudo apt install npm node.js
+```
+4. Install the packages
+```sh
+npm install
+```
+5. Bulild the web application using the `build script` (you can find it in `package.json`)
+```sh
+npm run build
+```
+6. Run the solution
+```sh
+npm run start
+```
+
+You can then open your web browser on `localhost:8080`. Click on `Receive C2D Messages` to watch incoming data. The line chart gets updated automatically. If you want to stop the web server, simply press `CTRL+C` in your terminal.
 
 # To do:
 
