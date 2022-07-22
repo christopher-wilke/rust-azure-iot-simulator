@@ -1,4 +1,4 @@
-to do: real device picture
+![alt text](images/Rust_on_embedded_device.jpg)
 
 # Motivation
 There are several [Azure IoT device simulators](https://docs.microsoft.com/de-de/azure/iot-hub/quickstart-control-device?pivots=programming-language-csharp) written in different languages (e.g., C#, Node.js, Python, etc.) available. However, the embedded industry focuses on performance, binary size, and safety. This might be an issue for classical OOP-oriented languages. 
