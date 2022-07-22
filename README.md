@@ -1,4 +1,4 @@
-![Rust on Embedded Device](images/Rust_on_embedded_device.jpg)
+![Architecture](images/Architecture.jpg)
 
 # Motivation
 There are several [Azure IoT device simulators](https://docs.microsoft.com/de-de/azure/iot-hub/quickstart-control-device?pivots=programming-language-csharp) written in different languages (e.g., C#, Node.js, Python, etc.) available. However, the embedded industry focuses on performance, binary size, and safety. This might be an issue for classical OOP-oriented languages. 
@@ -7,7 +7,7 @@ There are several [Azure IoT device simulators](https://docs.microsoft.com/de-de
 Rust is a low-level statically-typed multi-paradigm programming language that's focused on safety and performance. It solves problems that C/C++ has been struggling with for a long time, such as memory errors and building concurrent programs. According to the [Stack Overflow Developer Survey 2021](https://insights.stackoverflow.com/survey/2021), Rust is the most beloved language.
 
 ## Goal of the Project
-![Architecture](images/Architecture.jpg)
+![Rust on Embedded Device](images/Rust_on_embedded_device.jpg)
 
 We will run a temperature simulator and send data to an [gRPC](https://grpc.io/) endpoint via the [OpenTelemetry Protocol](https://opentelemetry.io/docs/reference/specification/protocol/). The receiver converts incoming data and send it via [MQTT](https://mqtt.org/) to an [Azure IoT Hub](https://azure.microsoft.com/en-us/services/iot-hub/) instance. You can  visualize incoming data by running a [web app](https://github.com/christopher-wilke/rust-azure-iot-simulator/tree/main/c2d-visualizer) on your local machine.
 
